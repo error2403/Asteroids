@@ -1,6 +1,7 @@
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from logger import log_state
+from player import Player
 
 def main():
     # print initial game settings/info
@@ -13,6 +14,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0.0
+    player = Player(x=SCREEN_WIDTH/2, y=SCREEN_HEIGHT/2)
 
     # start game loop
     while True:
@@ -26,9 +28,10 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
-
+        # update screen display data
         screen.fill("black")
-        # draw new screen
+        player.draw(screen)
+        # load new screen
         pygame.display.flip()
 
         # update pygame delta clock
