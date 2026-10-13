@@ -2,6 +2,8 @@ import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from logger import log_state
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     # print initial game settings/info
@@ -9,12 +11,23 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
+    # create groups for game objects
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+
+    # add game objects to groups
+    Player.containers = (updatable, drawable)
+    Asteroid.containers = (updatable, drawable, asteroids)
+    AsteroidField.containers = (updatable)
+
     # initialize game
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0.0
     player = Player(x=SCREEN_WIDTH/2, y=SCREEN_HEIGHT/2)
+    asteroid_field = AsteroidField()
 
     # start game loop
     while True:
@@ -28,12 +41,15 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
-        # update player data
-        player.update(dt)
+        # update group data
+        for object in updatable:
+            object.update(dt)
 
-        # update screen display data
+        # draw to sccreen
         screen.fill("black")
-        player.draw(screen)
+        for object in drawable:
+            object.draw(screen)
+
         # load new screen
         pygame.display.flip()
 
